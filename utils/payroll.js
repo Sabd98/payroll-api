@@ -48,7 +48,7 @@ module.exports = {
     };
   },
 
-  runPayrollCalculation: async (periodId, adminId, transaction) => {
+  runPayrollCalculation: async (periodId, adminId, transaction, db) => {
     const {
       PayrollPeriod,
       Employee,
@@ -56,89 +56,69 @@ module.exports = {
       Overtime,
       Reimbursement,
       Payslip,
-    } = require("../models");
+    } = db.models;
 
+    // Validasi periode
     const period = await PayrollPeriod.findByPk(periodId, { transaction });
-    const employees = await Employee.findAll({ transaction });
+    if (!period) {
+      throw new Error("Payroll period not found");
+    }
 
+    const employees = await Employee.findAll({ transaction });
     const workingDays = calculateWorkingDays(
       period.start_date,
       period.end_date
     );
 
     for (const employee of employees) {
-      // [1] Dapatkan reimbursement yang belum diproses
-      const unpaidReimbursements = await Reimbursement.findAll({
-        where: {
-          employee_id: employee.id,
-          payroll_period_id: periodId,
-          payslip_id: null,
-        },
-        transaction,
-      });
+      const [attendanceCount, overtimeHoursResult, reimbursementSum] =
+        await Promise.all([
+          Attendance.count({
+            where: {
+              employee_id: employee.id,
+              payroll_period_id: periodId,
+            },
+            transaction,
+          }),
+          Overtime.sum("hours", {
+            where: {
+              employee_id: employee.id,
+              payroll_period_id: periodId,
+            },
+            transaction,
+          }),
+          Reimbursement.sum("amount", {
+            where: {
+              employee_id: employee.id,
+              payroll_period_id: periodId,
+            },
+            transaction,
+          }),
+        ]);
 
-      // [2] Hitung total reimbursement
-      const reimbursementTotal = unpaidReimbursements.reduce(
-        (sum, r) => sum + parseFloat(r.amount),
-        0
-      );
+      const overtimeHours = overtimeHoursResult || 0;
+      const reimbursements = reimbursementSum || 0;
 
-      // [3] Hitung komponen lainnya
-      const [attendanceCount, overtimeHours] = await Promise.all([
-        Attendance.count({
-          where: {
-            employee_id: employee.id,
-            payroll_period_id: periodId,
-          },
-          transaction,
-        }),
-        Overtime.sum("hours", {
-          where: {
-            employee_id: employee.id,
-            payroll_period_id: periodId,
-          },
-          transaction,
-        }) || 0,
-      ]);
+      const dailySalary = employee.monthly_salary / workingDays;
+      const baseSalary = attendanceCount * dailySalary;
 
-      // [4] Kalkulasi gaji
-      const { baseSalary, overtimePay, totalPay } =
-        module.exports.calculateTotalPay(
-          employee.monthly_salary,
-          workingDays,
-          attendanceCount,
-          overtimeHours,
-          reimbursementTotal
-        );
+      const hourlyRate = employee.monthly_salary / (workingDays * 8);
+      const overtimePay = overtimeHours * (hourlyRate * 2);
 
-      // [5] Buat payslip
-      const payslip = await Payslip.create(
+      const totalPay = baseSalary + overtimePay + reimbursements;
+
+      await Payslip.create(
         {
           employee_id: employee.id,
           payroll_period_id: periodId,
           base_salary: baseSalary,
           overtime_pay: overtimePay,
-          total_reimbursements: reimbursementTotal,
+          total_reimbursements: reimbursements,
           total_pay: totalPay,
           created_by: adminId,
         },
         { transaction }
       );
-
-      // [6] Update reimbursement dengan payslip_id (NEW)
-      if (unpaidReimbursements.length > 0) {
-        await Reimbursement.update(
-          { payslip_id: payslip.id },
-          {
-            where: {
-              id: {
-                [Op.in]: unpaidReimbursements.map((r) => r.id),
-              },
-            },
-            transaction,
-          }
-        );
-      }
     }
   },
 };

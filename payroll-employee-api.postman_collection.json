@@ -1,0 +1,250 @@
+{
+	"info": {
+		"_postman_id": "365d6ff4-4e3e-4126-b05c-77a8972730a9",
+		"name": "payroll-employee-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "42601421"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "admin-login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "employee-login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"employee1\",\r\n  \"password\": \"pass1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "payroll-periods",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc1MTIwNjIyNCwiZXhwIjoxNzUxMjA5ODI0fQ.p3g-8KUAv0Lm0A1aDJcrSIg_1OJdy5Bey_zYXsoCCZ0"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"start_date\": \"2025-05-01\",\r\n  \"end_date\": \"2025-05-31\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/admin/payroll-periods"
+					},
+					"response": []
+				},
+				{
+					"name": "run-payroll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc1MTIwNjIyNCwiZXhwIjoxNzUxMjA5ODI0fQ.p3g-8KUAv0Lm0A1aDJcrSIg_1OJdy5Bey_zYXsoCCZ0"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"periodId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/admin/run-payroll"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc1MTIxMTE3NywiZXhwIjoxNzUxMjE0Nzc3fQ.6BIym0PhDuMRctxvKWIaqAMnWCpj3Oc-4QshUQDAB2I"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/api/admin/payslip-summary/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "employee",
+			"item": [
+				{
+					"name": "employee-attendances",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImVtcGxveWVlIiwidXNlcm5hbWUiOiJlbXBsb3llZTEiLCJpYXQiOjE3NTEyMDYyMzIsImV4cCI6MTc1MTIwOTgzMn0.Bp_FIzJb8GOHfzRmIC8xXIAzNOj7MarknwsxNPJksSQ"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"date\": \"2025-05-05\",\r\n  \"payroll_period_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/employee/attendances"
+					},
+					"response": []
+				},
+				{
+					"name": "employee-overtimes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImVtcGxveWVlIiwidXNlcm5hbWUiOiJlbXBsb3llZTEiLCJpYXQiOjE3NTEyMDYyMzIsImV4cCI6MTc1MTIwOTgzMn0.Bp_FIzJb8GOHfzRmIC8xXIAzNOj7MarknwsxNPJksSQ"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"date\": \"2025-05-02\",\r\n  \"hours\": 3,\r\n  \"payroll_period_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/employee/overtimes"
+					},
+					"response": []
+				},
+				{
+					"name": "employee-reimbursements",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImVtcGxveWVlIiwidXNlcm5hbWUiOiJlbXBsb3llZTEiLCJpYXQiOjE3NTEyMDYyMzIsImV4cCI6MTc1MTIwOTgzMn0.Bp_FIzJb8GOHfzRmIC8xXIAzNOj7MarknwsxNPJksSQ"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": 80.00,\r\n  \"description\": \"Work Allowance\",\r\n  \"payroll_period_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/employee/reimbursements"
+					},
+					"response": []
+				},
+				{
+					"name": "employee-payslip",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImVtcGxveWVlIiwidXNlcm5hbWUiOiJlbXBsb3llZTEiLCJpYXQiOjE3NTEyMDYyMzIsImV4cCI6MTc1MTIwOTgzMn0.Bp_FIzJb8GOHfzRmIC8xXIAzNOj7MarknwsxNPJksSQ"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/employee/payslips/1"
+					},
+					"response": []
+				},
+				{
+					"name": "employee-payroll-periods",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImVtcGxveWVlIiwidXNlcm5hbWUiOiJlbXBsb3llZTEiLCJpYXQiOjE3NTEyMDYyMzIsImV4cCI6MTc1MTIwOTgzMn0.Bp_FIzJb8GOHfzRmIC8xXIAzNOj7MarknwsxNPJksSQ"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/employee/payroll-periods"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -65,15 +65,16 @@ exports.submitAttendance = async (req, res) => {
       ip_address: req.ip,
     });
 
-    await audit.logDataChange(
-      "CREATE",
-      "attendances",
-      attendance.id,
-      { id: req.user.id, role: req.user.role },
-      req.ip,
-      null,
-      attendance.toJSON()
-    );
+    //Jika mau audit log 
+    // await audit.logDataChange(
+    //   "CREATE",
+    //   "attendances",
+    //   attendance.id,
+    //   { id: req.user.id, role: req.user.role },
+    //   req.ip,
+    //   null,
+    //   attendance.toJSON()
+    // );
 
     res.status(201).json(attendance);
   } catch (error) {

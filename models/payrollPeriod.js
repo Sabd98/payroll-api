@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       created_by: {
         type: DataTypes.INTEGER,
         references: {
-          model: "Admins",
+          model: "admins",
           key: "id",
         },
         allowNull: false,
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       updated_by: {
         type: DataTypes.INTEGER,
         references: {
-          model: "Admins",
+          model: "admins",
           key: "id",
         },
       },
@@ -57,24 +57,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  PayrollPeriod.associate = function (models) {
-    PayrollPeriod.hasMany(models.Attendance, {
-      foreignKey: "payroll_period_id",
-    });
-    PayrollPeriod.hasMany(models.Overtime, { foreignKey: "payroll_period_id" });
-    PayrollPeriod.hasMany(models.Reimbursement, {
-      foreignKey: "payroll_period_id",
-    });
-    PayrollPeriod.hasMany(models.Payslip, { foreignKey: "payroll_period_id" });
-    PayrollPeriod.belongsTo(models.Admin, {
-      as: "createdByAdmin",
-      foreignKey: "created_by",
-    });
-    PayrollPeriod.belongsTo(models.Admin, {
-      as: "updatedByAdmin",
-      foreignKey: "updated_by",
-    });
-  };
+//   PayrollPeriod.associate = function (models) {
+//     PayrollPeriod.hasMany(models.Attendance, {
+//       foreignKey: "payroll_period_id",
+//     });
+//     PayrollPeriod.hasMany(models.Overtime, { foreignKey: "payroll_period_id" });
+//     PayrollPeriod.hasMany(models.Reimbursement, {
+//       foreignKey: "payroll_period_id",
+//     });
+//     PayrollPeriod.hasMany(models.Payslip, { foreignKey: "payroll_period_id" });
+//     PayrollPeriod.belongsTo(models.Admin, {
+//       as: "createdByAdmin",
+//       foreignKey: "created_by",
+//     });
+//     PayrollPeriod.belongsTo(models.Admin, {
+//       as: "updatedByAdmin",
+//       foreignKey: "updated_by",
+//     });
+//   };
 
   return PayrollPeriod;
 };

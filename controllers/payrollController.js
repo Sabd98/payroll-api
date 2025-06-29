@@ -1,7 +1,5 @@
-const audit = require("../middlewares/audit");
 const { PayrollPeriod, Payslip, Employee } = require("../models");
 const { runPayrollCalculation } = require("../utils/payroll");
-// const payrollQueue = require("../workers/payrollWorker"); // Jika menggunakan background job
 
 exports.createPayrollPeriod = async (req, res) => {
   try {
@@ -21,16 +19,6 @@ exports.createPayrollPeriod = async (req, res) => {
       created_by: req.user.id,
       ip_address: req.ip,
     });
-
-    await audit.logDataChange(
-      "CREATE",
-      "attendances",
-      period.id,
-      { id: req.user.id, role: req.user.role },
-      req.ip,
-      null,
-      period.toJSON()
-    );
 
     res.status(201).json(period);
   } catch (error) {

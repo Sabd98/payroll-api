@@ -18,14 +18,14 @@ module.exports = (sequelize, DataTypes) => {
       created_by: {
         type: DataTypes.INTEGER,
         references: {
-          model: "Admins",
+          model: "Admin",
           key: "id",
         },
       },
       updated_by: {
         type: DataTypes.INTEGER,
         references: {
-          model: "Admins",
+          model: "Admin",
           key: "id",
         },
       },
